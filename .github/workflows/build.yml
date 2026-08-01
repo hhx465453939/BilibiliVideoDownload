@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-latest, macos-latest, 'ubuntu-latest']
+        os: [windows-latest, 'ubuntu-latest']
 
     # create steps
     steps:
@@ -55,17 +55,6 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install python@2 for macos (electron-builder 依赖)
-        if: matrix.os == 'macos-latest'
-        run: brew install python@2 || true
-
-      - name: Build mac app
-        if: matrix.os == 'macos-latest'
-        run: |
-          npm run electron:build
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Build ubuntu app
         if: matrix.os == 'ubuntu-latest'
         run: |
@@ -78,11 +67,6 @@ jobs:
         if: matrix.os == 'windows-latest'
         run: |
           npx rimraf "dist_electron/!(*.exe)"
-
-      - name: cleanup artifacts for macos
-        if: matrix.os == 'macos-latest'
-        run: |
-          npx rimraf "dist_electron/!(*.dmg)"
 
       - name: cleanup artifacts for ubuntu
         if: matrix.os == 'ubuntu-latest'
