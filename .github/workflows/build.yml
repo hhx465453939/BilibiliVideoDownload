@@ -11,6 +11,9 @@ on:
       - "hx-*"
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 # Workflow's jobs
 jobs:
   # job's id
@@ -51,6 +54,10 @@ jobs:
           npm run electron:build
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install python@2 for macos (electron-builder 依赖)
+        if: matrix.os == 'macos-latest'
+        run: brew install python@2 || true
 
       - name: Build mac app
         if: matrix.os == 'macos-latest'
